@@ -2,14 +2,23 @@
 
 Landing page for [openinvestorpitch.org](https://openinvestorpitch.org).
 
-A nonprofit, still forming, building an open standard so a startup can pitch opted-in investors once — and those investors can contribute pipeline back in the same format. Working short name: OIP.
+A nonprofit, still forming. A founder pitches once. Investors and partners use the same format to find the right match, or to pass a company on. Free. No account yet.
 
 ## Hosting
 
-This is a **Cloudflare Worker**, not a Pages project. The Worker serves `index.html` and `favicon.svg` for `openinvestorpitch.org`. Do not create a Pages project for this repo.
+This is a **Cloudflare Worker**, not a Pages project. Do not create a Pages project.
 
-The signup list will be **D1 on this same Worker** (`DB` binding). There is no Pages project to bind, and the site does not need to move to Fly.
+`worker.js` serves `index.html` and writes signups to D1 (`DB`). The admin list is `/admin`.
 
-## The list
+1. On the existing Worker, add a D1 database with the binding name `DB`. Do not create a Pages project.
+2. Set the Worker secret `ADMIN_PASSWORD`. `/admin` uses it.
+3. Deploy this directory with Wrangler onto that same Worker, and keep `openinvestorpitch.org` on it.
 
-Join currently stores emails in the visitor’s browser (`localStorage`). Nothing is sent to a server yet. Sign-in is going away. The form will `POST` a row the admin can read.
+Do not put the D1 id in this repo until the database exists. A deploy that omits the `DB` binding will drop it, so add the binding in `wrangler.jsonc` before you deploy:
+
+```jsonc
+"d1_databases": [{ "binding": "DB", "database_name": "openinvestorpitch", "database_id": "<id>" }]
+```
+
+`POST /api/join` with `{ "email": "ada@fund.com" }` inserts one row. The page does not store the address in the browser. The list is at `/admin`.
+

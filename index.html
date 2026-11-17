@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Open Investor Pitch</title>
-  <meta name="description" content="Open Investor Pitch is a nonprofit building an open standard so startups can pitch opted-in investors once, in one shared format." />
+  <meta name="description" content="A free way for founders to pitch once, and for the right investors to find them. Nonprofit, in formation." />
   <meta name="theme-color" content="#fffcf9" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -16,135 +16,82 @@
       --ink: #121212;
       --muted: #6d6864;
       --quiet: #a8a29c;
-      --faint: #c9c4be;
       --accent: #f47b24;
       --accent-hover: #e06e18;
       --on-accent: #fff;
+      --on-ink: #fff;
       --line: #ece7e2;
       --line-strong: #ded8d2;
-      --panel: #1c1c1c;
-      --panel-2: #2a2a2a;
-      --panel-3: #3a3a3a;
-      --dot: #5a5a5a;
-      --inverse: #f4f1ee;
-      --peek: clamp(5.75rem, 18vh, 8.5rem);
       --sans: Inter, ui-sans-serif, system-ui, sans-serif;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--sans); }
-    button, a { font-family: inherit; }
+    button, a, input { font-family: inherit; }
     button { cursor: pointer; }
     a { color: inherit; text-decoration: none; }
     .glow { pointer-events: none; position: absolute; inset: 0 0 auto 0; height: 26rem; background: radial-gradient(ellipse 68% 72% at 50% -28%, #fff3ea 0%, rgb(255 252 249 / 0) 70%); }
     header { position: sticky; top: 0; z-index: 30; }
+    header.scrolled .bar-wrap { background: rgb(255 252 249 / 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
     .bar { display: flex; align-items: center; height: 3.5rem; max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
     @media (min-width: 768px) { .bar { height: 4rem; padding: 0 2rem; } }
-    header.scrolled .bar-wrap { background: rgb(255 252 249 / 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
     .brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 650; font-size: 0.95rem; letter-spacing: -0.02em; }
     .mark { width: 1rem; height: 1rem; display: block; }
     .links { display: none; position: absolute; left: 50%; transform: translateX(-50%); gap: 2rem; }
     @media (min-width: 768px) { .links { display: flex; } }
     .links a { font-size: 0.8125rem; font-weight: 500; color: rgb(18 18 18 / 0.8); }
-    .actions { margin-left: auto; display: flex; align-items: center; gap: 0.75rem; }
-    .ghost { background: none; border: 0; font-size: 0.8125rem; font-weight: 500; display: none; }
-    @media (min-width: 640px) { .ghost { display: inline; } }
-    .black, .orange, .outline { border-radius: 0.5rem; font-weight: 600; font-size: 0.875rem; }
-    .black { background: var(--ink); color: white; border: 0; height: 2.25rem; padding: 0 0.9rem; }
-    .orange { background: var(--accent); color: white; border: 0; height: 2.75rem; padding: 0 1rem; }
+    .actions { margin-left: auto; display: flex; align-items: center; }
+    .ink { background: var(--ink); color: var(--on-ink); border: 0; height: 2.25rem; padding: 0 0.9rem; border-radius: 0.5rem; font-weight: 600; font-size: 0.8125rem; }
+    .orange, .outline { border-radius: 0.5rem; font-weight: 650; font-size: 0.875rem; height: 2.75rem; padding: 0 1rem; }
+    .orange { background: var(--accent); color: var(--on-accent); border: 0; }
     .orange:hover { background: var(--accent-hover); }
-    .outline { background: var(--canvas); color: var(--ink); border: 1px solid var(--line-strong); height: 2.75rem; padding: 0 1rem; box-shadow: 0 1px 1px rgb(18 18 18 / 0.05); }
-    @media (min-width: 768px) { .orange.hero-btn, .outline.hero-btn { height: 2.25rem; } }
+    .orange:disabled { opacity: 0.6; }
+    .outline { background: var(--canvas); color: var(--ink); border: 1px solid var(--line-strong); box-shadow: 0 1px 1px rgb(18 18 18 / 0.05); display: inline-flex; align-items: center; }
     .menu-btn { display: inline-flex; width: 2.75rem; height: 2.75rem; align-items: center; justify-content: center; background: none; border: 0; }
     @media (min-width: 768px) { .menu-btn { display: none; } }
     .menu { display: none; border-top: 1px solid var(--line); padding: 0.5rem 1.25rem 0.75rem; }
     .menu.open { display: block; }
-    .menu a, .menu button { display: flex; align-items: center; height: 2.75rem; width: 100%; background: none; border: 0; font-size: 0.95rem; font-weight: 500; text-align: left; }
-    .stage { position: relative; display: flex; min-height: calc(100svh - 3.5rem); flex-direction: column; }
-    @media (min-width: 768px) { .stage { min-height: calc(100svh - 4rem); } }
-    .hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0.5rem 1.5rem; }
-    .stack { display: flex; flex-direction: column; align-items: center; gap: 0.9rem; max-width: 48rem; }
-    .badge { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--accent); font-size: 0.8125rem; font-weight: 500; margin: 0; }
-    .pill { background: var(--accent); color: white; border-radius: 999px; padding: 0.1rem 0.45rem; font-size: 0.75rem; font-weight: 650; }
-    h1 { font-size: clamp(2.15rem, 5.7vw, 3.6rem); line-height: 1.02; letter-spacing: -0.045em; font-weight: 800; margin: 0; }
-    h1 span { color: var(--accent); }
-    .lede { max-width: 36rem; margin: 0; color: var(--muted); font-size: 0.95rem; line-height: 1.45; }
-    .ctas { display: flex; flex-direction: column; gap: 0.75rem; }
-    @media (min-width: 640px) { .ctas { flex-direction: row; } }
-    .for { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem 1.25rem; margin: 0; font-size: 0.8125rem; }
-    .for .label { color: var(--faint); }
-    .for b { font-weight: 500; color: var(--quiet); }
-    .peek { height: var(--peek); }
-    .pull { margin-top: calc(var(--peek) * -1); padding: 0 1.5rem; position: relative; z-index: 2; }
-    .window { max-width: 42rem; margin: 0 auto; background: var(--panel); color: var(--inverse); border-radius: 1rem 1rem 0 0; box-shadow: 0 30px 70px rgb(18 18 18 / 0.18); overflow: hidden; }
-    @media (min-width: 1024px) { .window { max-width: 64rem; } }
-    .dots { display: flex; gap: 0.4rem; padding: 0.7rem 1.25rem 0; }
-    .dots i { width: 0.5rem; height: 0.5rem; border-radius: 99px; background: var(--dot); display: block; }
-    .desk { display: grid; min-height: 28rem; }
-    @media (min-width: 640px) { .desk { grid-template-columns: 9.5rem 1fr; } }
-    aside { display: none; border-right: 1px solid rgb(255 255 255 / 0.06); padding: 0.25rem 1rem 1rem; }
-    @media (min-width: 640px) { aside { display: block; } }
-    .bar-orange { height: 0.35rem; width: 2.6rem; border-radius: 99px; background: var(--accent); margin-bottom: 0.75rem; }
-    .skel { height: 0.35rem; border-radius: 99px; background: var(--panel-3); margin-bottom: 0.6rem; }
-    .nav-side { margin-top: 2rem; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8125rem; color: rgb(244 241 238 / 0.75); }
-    .nav-side .on { color: var(--inverse); font-weight: 600; }
-    .cards { display: grid; gap: 0.75rem; padding: 0.25rem 0.75rem 1.5rem; }
-    @media (min-width: 640px) { .cards { grid-template-columns: 1fr 1fr; padding: 0.25rem 1rem 1.5rem; } }
-    article.card { background: var(--panel-2); border-radius: 0.5rem; padding: 3rem 1rem 1rem; }
-    .card h2 { margin: 0; font-size: 0.9rem; display: flex; justify-content: space-between; gap: 0.5rem; }
-    .card h2 span, .meta { color: rgb(244 241 238 / 0.55); font-weight: 400; font-size: 0.8125rem; }
-    .card p { color: rgb(244 241 238 / 0.8); font-size: 0.8125rem; line-height: 1.45; }
-    .note { color: rgb(244 241 238 / 0.45); font-size: 0.8125rem; padding: 0 1rem 1.25rem; margin: 0; }
-    section { padding: 5.5rem 1.5rem; }
-    .wrap { max-width: 64rem; margin: 0 auto; }
+    .menu a { display: flex; align-items: center; height: 2.75rem; font-size: 0.95rem; font-weight: 500; }
+    .hero, section { padding: 4.5rem 1.5rem; }
+    .hero { padding-top: 4.5rem; }
+    @media (min-width: 768px) { .hero { padding-top: 7rem; } }
+    .center { max-width: 48rem; margin: 0 auto; text-align: center; }
+    .narrow { max-width: 46rem; margin: 0 auto; }
+    .wide { max-width: 64rem; margin: 0 auto; }
     .kicker { color: var(--accent); font-size: 0.8125rem; font-weight: 650; margin: 0; }
-    h2.display { font-size: clamp(1.8rem, 3vw, 2.4rem); letter-spacing: -0.03em; margin: 0.6rem 0 0; max-width: 38rem; }
-    .sub { color: var(--muted); max-width: 40rem; line-height: 1.55; }
-    .grid4, .grid3, .grid2 { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 1rem; overflow: hidden; margin-top: 2.5rem; }
-    @media (min-width: 640px) { .grid2 { grid-template-columns: 1fr 1fr; } }
-    .grid4 { background: transparent; border: 0; gap: 1.5rem; }
-    @media (min-width: 800px) { .grid4 { grid-template-columns: repeat(4, 1fr); } .grid3 { grid-template-columns: repeat(3, 1fr); background: transparent; border: 0; gap: 1rem; } }
-    .cell { background: var(--canvas); padding: 1.5rem; }
-    .cell h3, .tier h3, .step h3 { margin: 0.4rem 0 0; letter-spacing: -0.02em; }
-    .cell p, .tier p, .step p, .field p { color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
-    .step .kicker { margin-bottom: 0.2rem; }
-    .tier { border: 1px solid var(--line); border-radius: 1rem; padding: 1.5rem; display: flex; flex-direction: column; background: var(--canvas); }
-    .tier.featured { border-color: var(--accent); }
-    .price { font-size: 1.8rem; font-weight: 750; letter-spacing: -0.03em; margin: 0.6rem 0; }
-    .tier ul { padding: 0; margin: 1rem 0 0; list-style: none; flex: 1; }
-    .tier li { display: flex; gap: 0.5rem; font-size: 0.92rem; margin: 0.4rem 0; }
-    .dot { width: 0.4rem; height: 0.4rem; border-radius: 99px; background: var(--accent); margin-top: 0.45rem; flex: none; }
-    .tier .orange, .tier .outline { width: 100%; margin-top: 1.5rem; }
-    .fields { border: 1px solid var(--line); border-radius: 1rem; overflow: hidden; margin-top: 1.5rem; }
-    .field { display: grid; gap: 0.2rem; padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--line); }
-    .field:last-child { border-bottom: 0; }
-    @media (min-width: 640px) { .field { grid-template-columns: 10rem 1fr; gap: 1.5rem; align-items: baseline; } }
-    .field h3 { margin: 0; font-size: 0.92rem; }
-    .updates { display: grid; gap: 2rem; border: 1px solid var(--line); border-radius: 1.5rem; padding: 2rem 1.25rem; }
-    @media (min-width: 800px) { .updates { grid-template-columns: 1.1fr 0.9fr; padding: 3rem; } }
-    .timeline { padding: 0; margin: 1.5rem 0 0; list-style: none; }
-    .timeline li { margin: 0.7rem 0; font-size: 0.95rem; }
+    h1 { font-size: clamp(2.15rem, 5.7vw, 3.6rem); line-height: 1.02; letter-spacing: -0.045em; font-weight: 800; margin: 1rem 0 0; }
+    h1 span { color: var(--accent); }
+    h2 { letter-spacing: -0.03em; margin: 0.6rem 0 0; }
+    .lede, .prose p, .benefit p, .join-copy { color: var(--muted); line-height: 1.6; }
+    .lede { max-width: 38rem; margin: 1.25rem auto 0; }
+    .ctas { display: flex; flex-direction: column; gap: 0.75rem; align-items: center; margin-top: 2rem; }
+    @media (min-width: 640px) { .ctas { flex-direction: row; justify-content: center; } }
+    .prose p { margin: 1rem 0 0; }
+    .benefits { display: grid; gap: 2.5rem; }
+    @media (min-width: 800px) { .benefits { grid-template-columns: 1fr 1fr 1fr; } }
+    .benefit h2 { font-size: 1.25rem; }
+    .free { font-size: 0.92rem; font-weight: 650; margin: 0.8rem 0 0; }
+    .benefit p { margin: 0.75rem 0 0; font-size: 0.95rem; }
+    .join { display: grid; gap: 2rem; border: 1px solid var(--line); border-radius: 1.5rem; padding: 2rem 1.25rem; }
+    @media (min-width: 800px) { .join { grid-template-columns: 1.1fr 0.9fr; padding: 3rem; align-items: start; } }
+    .join h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); }
     form, .saved { border: 1px solid var(--line); border-radius: 1rem; padding: 1.25rem; }
-    label { display: block; font-size: 0.8125rem; font-weight: 550; margin-top: 0.8rem; }
-    input, select { width: 100%; height: 2.75rem; margin-top: 0.35rem; border-radius: 0.5rem; border: 1px solid var(--line-strong); background: var(--canvas); padding: 0 0.75rem; font: inherit; font-size: 0.9rem; }
-    input:focus, select:focus { outline: 2px solid var(--accent); border-color: transparent; }
-    .err { color: var(--accent); font-size: 0.8125rem; font-weight: 600; }
+    label { display: block; font-size: 0.8125rem; font-weight: 600; }
+    input { width: 100%; height: 2.75rem; margin-top: 0.35rem; border-radius: 0.5rem; border: 1px solid var(--line-strong); background: var(--canvas); padding: 0 0.75rem; font-size: 0.95rem; }
+    input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+    .err { color: var(--accent); font-size: 0.8125rem; font-weight: 650; }
     .fine { color: var(--quiet); font-size: 0.8125rem; line-height: 1.45; }
     form .orange { width: 100%; margin-top: 1rem; }
     footer { border-top: 1px solid var(--line); padding: 2rem 1.5rem; }
     .foot { max-width: 64rem; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; }
     .foot p { color: var(--muted); margin: 0; font-size: 0.92rem; }
-    .text-btn { background: none; border: 0; color: var(--accent); font-weight: 650; }
+    .text-btn { background: none; border: 0; color: var(--accent); font-weight: 650; padding: 0; }
     dialog { border: 0; border-radius: 1rem; padding: 1.4rem; width: min(100% - 2rem, 28rem); box-shadow: 0 30px 70px rgb(18 18 18 / 0.18); }
     dialog::backdrop { background: rgb(18 18 18 / 0.4); }
     .dlg-head { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; }
     dialog h3 { margin: 0; letter-spacing: -0.03em; }
-    dialog p { color: var(--muted); font-size: 0.92rem; }
-    .x { background: none; border: 0; width: 2.75rem; height: 2.75rem; font-size: 1.2rem; }
-    @media (max-height: 560px) {
-      h1 { font-size: 2.6rem; line-height: 1; }
-      .stack { gap: 0.45rem; }
-    }
+    dialog .dlg-head p { color: var(--muted); font-size: 0.92rem; margin: 0.35rem 0 0; }
+    .x { background: none; border: 0; width: 2.75rem; height: 2.75rem; font-size: 1.25rem; }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   </style>
 </head>
@@ -153,114 +100,91 @@
   <header id="top">
     <div class="bar-wrap">
       <div class="bar">
-        <a class="brand" href="#top"><svg class="mark" viewBox="0 0 16 16" aria-hidden="true"><rect width="16" height="16" rx="4" fill="#f47b24"/><path d="M4.2 8.1h5.1M7.6 5.4l2.7 2.7-2.7 2.7" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Open Pitch</a>
+        <a class="brand" href="#top"><svg class="mark" viewBox="0 0 16 16" aria-hidden="true"><rect width="16" height="16" rx="4" fill="#f47b24"/><path d="M4.2 8.1h5.1M7.6 5.4l2.7 2.7-2.7 2.7" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Open Investor Pitch</a>
         <nav class="links">
-          <a href="#standard">Standard</a>
-          <a href="#join">Join</a>
-          <a href="#format">Format</a>
-          <a href="#updates">Updates</a>
+          <a href="#vision">Vision</a>
+          <a href="#founders">Founders</a>
+          <a href="#investors">Investors</a>
+          <a href="#partners">Partners</a>
         </nav>
         <div class="actions">
-          <button class="ghost" type="button" id="sign-open">Sign in</button>
-          <button class="black" type="button" id="start-open">Get started</button>
+          <button class="ink" type="button" id="open-join">Join the list</button>
           <button class="menu-btn" type="button" id="menu-btn" aria-expanded="false" aria-label="Open menu">☰</button>
         </div>
       </div>
       <div class="menu" id="menu">
-        <a href="#standard">Standard</a>
-        <a href="#join">Join</a>
-        <a href="#format">Format</a>
-        <a href="#updates">Updates</a>
-        <button type="button" id="sign-open-m">Sign in</button>
+        <a href="#vision">Vision</a>
+        <a href="#founders">Founders</a>
+        <a href="#investors">Investors</a>
+        <a href="#partners">Partners</a>
       </div>
     </div>
   </header>
 
-  <section class="stage">
-    <div class="hero">
-      <div class="stack">
-        <p class="badge"><span class="pill">New</span> The open pitch standard is forming</p>
-        <h1>Accept open pitches<br />in <span>one</span> format, not fifty</h1>
-        <p class="lede">Open Investor Pitch is a nonprofit building one open standard — and a shared server — so a founder publishes a raise once and every opted-in investor can read it.</p>
-        <div class="ctas">
-          <button class="orange hero-btn" type="button" id="hero-join">Join the list</button>
-          <a class="outline hero-btn" href="#format">Read the format</a>
-        </div>
-        <p class="for"><span class="label">Built for</span><b>Founders</b><b>Angels</b><b>Seed</b><b>Scouts</b><b>Funds</b></p>
+  <section class="hero">
+    <div class="center">
+      <p class="kicker">Nonprofit, in formation</p>
+      <h1>Find the <span>right</span> investor without pitching fifty times</h1>
+      <p class="lede">Fundraising is an opaque market. Founders tell the same story over and over. Investors see companies that were never for them, and have no clean way to send them on. Open Investor Pitch is a free way to pitch once, and for the right people to find each other.</p>
+      <div class="ctas">
+        <button class="orange" type="button" id="hero-join">Join the list</button>
+        <a class="outline" href="#vision">Why it matters</a>
       </div>
-    </div>
-    <div class="peek"></div>
-  </section>
-
-  <div class="pull">
-    <div class="window">
-      <div class="dots"><i></i><i></i><i></i></div>
-      <div class="desk">
-        <aside>
-          <div class="bar-orange"></div>
-          <div class="skel" style="width:5rem"></div>
-          <div class="skel" style="width:3.5rem"></div>
-          <div class="skel" style="width:4rem"></div>
-          <div class="nav-side"><span class="on">Live raises</span><span>Investors</span><span>Contributed</span><span>Format</span></div>
-        </aside>
-        <div>
-          <div class="cards" id="cards"></div>
-          <p class="note">Sample desk. Nothing here is a live raise. Opted-in investors would read real pitches from the shared server.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <section id="standard">
-    <div class="wrap">
-      <p class="kicker">The standard</p>
-      <h2 class="display">A common pitch, not another portal.</h2>
-      <p class="sub">Open Investor Pitch — OIP, until the name settles — is a nonprofit. VCs who opt in agree to accept this format from one shared server, and can contribute pipeline they already have.</p>
-      <div class="grid2" id="points"></div>
     </div>
   </section>
 
-  <section style="padding-top:0">
-    <div class="wrap grid4" id="steps" style="border-top:1px solid var(--line); padding-top:3rem"></div>
+  <section id="vision">
+    <div class="narrow prose">
+      <p class="kicker">Vision</p>
+      <h2>Less friction between a founder and the fund that would actually say yes.</h2>
+      <p>Most founders never meet the investor who wanted their company. Most investors never see the raise they were looking for. What sits in between is warm intros, forwarded decks, and a different format every time.</p>
+      <p>Open Investor Pitch is a shared way to pitch, so a company can be read, passed on, or picked up without starting over. It is free. There is no account, and no product to log into yet. Join the list to follow it, or to say you want to take part.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wide benefits">
+      <article class="benefit" id="founders">
+        <p class="kicker">Founders</p>
+        <h2>Fill out a pitch once. Reach a lot of investors.</h2>
+        <p class="free">Free.</p>
+        <p>Stop rewriting the same story for every fund. One pitch, kept current, read by investors who asked to see it. The aim is the investor who fits, not a bigger blast.</p>
+      </article>
+      <article class="benefit" id="investors">
+        <p class="kicker">Investors</p>
+        <h2>More of the right deal flow. A way to pass the rest on.</h2>
+        <p class="free">Free.</p>
+        <p>Read companies in one format. When a founder is not for you, help them reach the investor who is, instead of the pitch dying in your inbox. You opt in. Nothing is pushed at a fund that didn’t ask.</p>
+      </article>
+      <article class="benefit" id="partners">
+        <p class="kicker">Partners</p>
+        <h2>A standard pitch. More investors. More rounds closed.</h2>
+        <p class="free">Free.</p>
+        <p>Accelerators, incubators, scouts, and the rest of the venture ecosystem. Your companies should not translate themselves into a new deck for every intro. One format gets them in front of more investors, and more of those raises have a chance to close.</p>
+      </article>
+    </div>
   </section>
 
   <section id="join">
-    <div class="wrap">
-      <p class="kicker">Join</p>
-      <h2 class="display">No seats. No tiers to buy.</h2>
-      <p class="sub">This is a nonprofit in formation. Membership is a choice to use the format, not a subscription.</p>
-      <div class="grid3" id="tiers"></div>
-    </div>
-  </section>
-
-  <section id="format" style="padding-top:1rem">
-    <div class="wrap" style="border-top:1px solid var(--line); padding-top:4rem">
-      <p class="kicker">Format</p>
-      <h2 class="display">A draft, on purpose.</h2>
-      <p class="sub">The name may change. The fields below are the working shape of an open pitch — enough to route a raise, not enough to pretend the spec is finished.</p>
-      <div class="fields" id="fields"></div>
-    </div>
-  </section>
-
-  <section id="updates">
-    <div class="wrap updates">
-      <div>
-        <p class="kicker">Updates</p>
-        <h2 class="display">Follow it while the draft is still open.</h2>
-        <p class="sub">Names, schema, and the server are not locked. Join the list and you’ll hear when there is something to react to. Project notes only.</p>
-        <ul class="timeline">
-          <li><b>Now. </b><span class="fine">A working name, a domain, and this draft.</span></li>
-          <li><b>Next. </b><span class="fine">An opt-in list of investors and founders.</span></li>
-          <li><b>Then. </b><span class="fine">The shared server, and pipeline that can move both ways.</span></li>
-        </ul>
+    <div class="wide join">
+      <div class="join-copy">
+        <p class="kicker">Join</p>
+        <h2>Get the updates. Or say you want in.</h2>
+        <p>Leave an email. We’ll write when there is a way to take part, and when the format is ready to use. No account.</p>
       </div>
-      <div id="page-form"></div>
+      <form id="join-form" novalidate>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@fund.com" />
+        <p class="err" id="join-error" hidden></p>
+        <button class="orange" type="submit">Join the list</button>
+        <p class="fine">No pitch blasts. No account.</p>
+      </form>
     </div>
   </section>
 
   <footer>
     <div class="foot">
-      <div class="brand"><svg class="mark" viewBox="0 0 16 16" aria-hidden="true"><rect width="16" height="16" rx="4" fill="#f47b24"/><path d="M4.2 8.1h5.1M7.6 5.4l2.7 2.7-2.7 2.7" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg> Open Investor Pitch</div>
+      <div class="brand"><svg class="mark" viewBox="0 0 16 16" aria-hidden="true"><rect width="16" height="16" rx="4" fill="#f47b24"/><path d="M4.2 8.1h5.1M7.6 5.4l2.7 2.7-2.7 2.7" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Open Investor Pitch</div>
       <p>Nonprofit in formation · openinvestorpitch.org</p>
       <button class="text-btn" type="button" id="foot-join">Join the list</button>
     </div>
@@ -270,166 +194,69 @@
     <div class="dlg-head">
       <div>
         <h3>Join the list</h3>
-        <p>Project updates for Open Investor Pitch. The list stays on this browser until email is connected.</p>
+        <p>Updates, or a note that you want to participate. No account.</p>
       </div>
-      <button class="x" type="button" data-close aria-label="Close">×</button>
+      <button class="x" type="button" id="close-join" aria-label="Close">×</button>
     </div>
-    <div id="dialog-form"></div>
-  </dialog>
-
-  <dialog id="sign-dialog">
-    <div class="dlg-head">
-      <div>
-        <h3>Sign in</h3>
-        <p>Check whether this email is already on the update list in this browser.</p>
-      </div>
-      <button class="x" type="button" data-close aria-label="Close">×</button>
-    </div>
-    <form id="sign-form">
-      <label>Email <input type="email" name="email" required placeholder="you@fund.com" autocomplete="email" /></label>
-      <button class="black" style="width:100%;margin-top:1rem;height:2.75rem" type="submit">Check the list</button>
-      <p id="sign-result"></p>
+    <form id="dialog-form" novalidate>
+      <label for="dialog-email">Email</label>
+      <input id="dialog-email" name="email" type="email" required autocomplete="email" placeholder="you@fund.com" />
+      <p class="err" id="dialog-error" hidden></p>
+      <button class="orange" type="submit">Join the list</button>
+      <p class="fine">No pitch blasts. No account.</p>
     </form>
   </dialog>
 
   <script>
-    const LIST_ENDPOINT = "";
-    const KEY = "oip.subscribers.v1";
-    const roles = { founder: "Founder", investor: "Investor", partner: "Accelerator or scout" };
-
-    const raises = [
-      ["Harbor & Pine", "$900k", "Pre-seed · Climate", "Software for small forest owners selling carbon with a paper trail."],
-      ["Northline", "$2.4M", "Seed · Fintech", "Treasury for startups that already have more than one entity."],
-      ["Kite Mail", "$1.1M", "Pre-seed · Devtools", "Transactional email that arrives as a schema, not a PDF."],
-      ["Glass Orchard", "$3.5M", "Seed · Health", "Clinic scheduling that fits the visit the patient actually booked."]
-    ];
-    document.getElementById("cards").innerHTML = raises.map(([n, r, m, l]) =>
-      `<article class="card"><h2>${n} <span>${r}</span></h2><p class="meta">${m}</p><p>${l}</p></article>`).join("");
-
-    const points = [
-      ["One schema", "Every raise uses the same fields. The deck can still exist. It stops being the system of record."],
-      ["Opt in, don’t scrape", "Investors join because they will accept the format. A pitch is never pushed to someone who didn’t ask."],
-      ["Pipeline, both ways", "Firms can contribute deals they already received. The server collects raises and mandates in one place."],
-      ["An MCP server", "The nonprofit runs a shared server other tools can read and write. The format stays open. The inbox doesn’t."]
-    ];
-    document.getElementById("points").innerHTML = points.map(([t, b]) => `<article class="cell"><h3>${t}</h3><p>${b}</p></article>`).join("");
-
-    const steps = [
-      ["Founder publishes", "One open pitch. Updated in place when the round changes."],
-      ["Server files it", "The shared MCP server checks the pitch against the format."],
-      ["Investors pull it", "Opted-in funds read it in their own tools, not a new login."],
-      ["Pipeline comes back", "Deals a firm already received can be contributed in the same shape."]
-    ];
-    document.getElementById("steps").innerHTML = steps.map(([t, b], i) => `<article class="step"><p class="kicker">0${i + 1}</p><h3>${t}</h3><p>${b}</p></article>`).join("");
-
-    const tiers = [
-      ["Founders", "Publish the raise once. Keep it current. Stop rewriting the same email.", ["One pitch, one URL", "Updates land in the same record", "You choose what is public"], false],
-      ["Investors", "Opt in. Accept open pitches. Contribute deals from the pipeline you already have.", ["Read raises in the format", "No unsolicited spray", "Send pipeline back in"], true],
-      ["Partners", "Accelerators, scouts, and syndicates who want a format their companies can reuse.", ["Point founders at one schema", "Follow the draft as it changes", "No vendor lock-in"], false]
-    ];
-    document.getElementById("tiers").innerHTML = tiers.map(([who, line, pts, featured]) =>
-      `<article class="tier${featured ? " featured" : ""}"><h3>${who}</h3><p class="price">Free</p><p>${line}</p><ul>${pts.map((p) => `<li><i class="dot"></i>${p}</li>`).join("")}</ul><button class="${featured ? "orange" : "outline"}" type="button" data-join>Join the list</button></article>`).join("");
-
-    const fields = [
-      ["Company", "Legal name and the name people actually say."],
-      ["One line", "What it does, without the category theater."],
-      ["Round", "Stage, instrument, target, and what is already in."],
-      ["Where", "Geography of the company and of the raise."],
-      ["Sector", "A short label an investor can route on."],
-      ["Traction", "The few numbers that matter this quarter."],
-      ["Links", "Site, deck, and data room. Not six attachments."],
-      ["Contact", "Who should hear a yes, a no, or a pass-along."]
-    ];
-    document.getElementById("fields").innerHTML = fields.map(([n, d]) => `<div class="field"><h3>${n}</h3><p>${d}</p></div>`).join("");
-
-    function read() {
-      try { const v = JSON.parse(localStorage.getItem(KEY) || "[]"); return Array.isArray(v) ? v : []; } catch { return []; }
-    }
-    function find(email) { return read().find((s) => s.email === email.trim().toLowerCase()); }
-    function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
-    async function save(input) {
-      const email = input.email.trim().toLowerCase();
-      const existing = find(email);
-      const next = { email, role: input.role, name: input.name.trim(), joinedAt: existing?.joinedAt || new Date().toISOString() };
-      const all = read().filter((s) => s.email !== email);
-      all.push(next);
-      localStorage.setItem(KEY, JSON.stringify(all));
-      if (LIST_ENDPOINT) {
-        await fetch(LIST_ENDPOINT, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(next) });
-      }
-      return next;
-    }
-
-    function formHtml(id) {
-      return `<form id="${id}" novalidate>
-        <label>Email <input name="email" type="email" required placeholder="you@fund.com" autocomplete="email" /></label>
-        ${id === "page" ? `<label>Name <span class="fine">optional</span> <input name="name" autocomplete="name" /></label>` : `<input type="hidden" name="name" value="" />`}
-        <label>I am <select name="role"><option value="investor">An investor</option><option value="founder">A founder</option><option value="partner">An accelerator or scout</option></select></label>
-        <p class="err" hidden></p>
-        <button class="orange" type="submit">Join the list</button>
-        <p class="fine">Kept on this browser for now. No pitch blasts.</p>
-      </form>`;
-    }
-    const pageSlot = document.getElementById("page-form");
-    const dialogSlot = document.getElementById("dialog-form");
-    pageSlot.innerHTML = formHtml("page");
-    dialogSlot.innerHTML = formHtml("dialog");
-
-    function wire(form) {
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const data = new FormData(form);
-        const email = String(data.get("email") || "");
-        const err = form.querySelector(".err");
-        if (!isEmail(email)) { err.hidden = false; err.textContent = "Enter a real email."; return; }
-        err.hidden = true;
-        const saved = await save({ email, role: String(data.get("role")), name: String(data.get("name") || "") });
-        const box = document.createElement("div");
-        box.className = "saved";
-        box.innerHTML = `<p class="kicker">You’re on the list</p><p style="color:var(--ink);font-weight:700">${saved.email}</p><p>Saved on this browser as ${roles[saved.role]}. Nothing was sent to a server${LIST_ENDPOINT ? "" : " yet"}.</p>`;
-        form.replaceWith(box);
-      });
-    }
-    wire(document.getElementById("page"));
-    wire(document.getElementById("dialog"));
-
-    const joinDialog = document.getElementById("join-dialog");
-    const signDialog = document.getElementById("sign-dialog");
-    function openJoin() { signDialog.close(); joinDialog.showModal(); }
-    document.querySelectorAll("[data-join], #hero-join, #start-open, #foot-join").forEach((el) => el.addEventListener("click", openJoin));
-    document.querySelectorAll("[data-close]").forEach((el) => el.addEventListener("click", () => el.closest("dialog").close()));
-
-    function openSign() {
-      document.getElementById("sign-result").textContent = "";
-      signDialog.showModal();
-    }
-    document.getElementById("sign-open").addEventListener("click", openSign);
-    document.getElementById("sign-open-m").addEventListener("click", () => { document.getElementById("menu").classList.remove("open"); openSign(); });
-    document.getElementById("sign-form").addEventListener("submit", (event) => {
-      event.preventDefault();
-      const email = new FormData(event.target).get("email");
-      const result = document.getElementById("sign-result");
-      if (!isEmail(String(email))) { result.textContent = "Enter a real email."; return; }
-      const found = find(String(email));
-      if (found) result.innerHTML = `${found.email} is on the list as ${roles[found.role]}.`;
-      else result.innerHTML = `Not on this browser yet. <button class="text-btn" type="button" id="from-sign">Join the list</button>`;
-      document.getElementById("from-sign")?.addEventListener("click", openJoin);
-    });
-
+    const header = document.querySelector("header");
     const menu = document.getElementById("menu");
     const menuBtn = document.getElementById("menu-btn");
+    const dialog = document.getElementById("join-dialog");
+    addEventListener("scroll", () => header.classList.toggle("scrolled", scrollY > 8), { passive: true });
     menuBtn.addEventListener("click", () => {
       const open = menu.classList.toggle("open");
       menuBtn.setAttribute("aria-expanded", String(open));
       menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-      menuBtn.textContent = open ? "×" : "☰";
     });
-    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => { menu.classList.remove("open"); menuBtn.textContent = "☰"; }));
+    menu.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => menu.classList.remove("open")));
+    document.querySelectorAll("#open-join, #hero-join, #foot-join").forEach((button) => {
+      button.addEventListener("click", () => dialog.showModal());
+    });
+    document.getElementById("close-join").addEventListener("click", () => dialog.close());
 
-    const header = document.querySelector("header");
-    const onScroll = () => header.classList.toggle("scrolled", window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    function isEmail(value) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+    }
+
+    function bind(form, errorEl) {
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const email = String(new FormData(form).get("email") || "");
+        const button = form.querySelector("button");
+        if (!isEmail(email)) {
+          errorEl.hidden = false;
+          errorEl.textContent = "Enter a real email.";
+          return;
+        }
+        errorEl.hidden = true;
+        button.disabled = true;
+        try {
+          const response = await fetch("/api/join", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+          if (!response.ok) throw new Error("save failed");
+          form.outerHTML = `<div class="saved"><p class="kicker">You’re on the list</p><p style="font-weight:700;margin:0.4rem 0 0">${email.trim().toLowerCase()}</p><p class="fine">We’ll write when there is something to take part in.</p></div>`;
+        } catch {
+          errorEl.hidden = false;
+          errorEl.textContent = "That didn’t save. Try again in a minute.";
+          button.disabled = false;
+        }
+      });
+    }
+    bind(document.getElementById("join-form"), document.getElementById("join-error"));
+    bind(document.getElementById("dialog-form"), document.getElementById("dialog-error"));
   </script>
 </body>
 </html>
