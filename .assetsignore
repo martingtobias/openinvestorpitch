@@ -1,0 +1,11 @@
+# Keep the public site to the files served today. Tooling must not be uploaded.
+.git
+.wrangler
+node_modules
+src
+wrangler.jsonc
+package.json
+package-lock.json
+.gitignore
+.dev.vars
+.dev.vars.*
