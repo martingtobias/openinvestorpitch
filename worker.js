@@ -1,4 +1,9 @@
-const COOKIE = "oip_admin";
+const TEAM_DOMAIN = "https://ancient-flower-1bd3.cloudflareaccess.com";
+const CERTS_URL = `${TEAM_DOMAIN}/cdn-cgi/access/certs`;
+const ALLOWED_EMAIL = "martin@incisive.vc";
+const KEY_TTL_MS = 60 * 60 * 1000;
+
+let keyCache = { keys: null, expires: 0 };
 
 export default {
   async fetch(request, env) {
@@ -38,27 +43,19 @@ async function join(request, env) {
 }
 
 async function admin(request, env) {
-  if (!env.ADMIN_PASSWORD) {
-    return new Response("Admin password is not set on this Worker.", { status: 503 });
+  const token = request.headers.get("Cf-Access-Jwt-Assertion");
+  let allowed = false;
+  try {
+    allowed = await accessAllows(token);
+  } catch {
+    allowed = false;
   }
-  if (request.method === "POST") {
-    const form = await request.formData();
-    const password = String(form.get("password") || "");
-    if (!(await same(password, env.ADMIN_PASSWORD))) return page("Wrong password.", false);
-    const headers = new Headers({ "content-type": "text/html; charset=utf-8" });
-    headers.append("set-cookie", `${COOKIE}=${await seal(env.ADMIN_PASSWORD)}; HttpOnly; Secure; SameSite=Lax; Path=/admin; Max-Age=604800`);
-    return new Response(await list(env), { headers });
-  }
-  const cookie = request.headers.get("cookie") || "";
-  const token = cookie.split(";").map((part) => part.trim()).find((part) => part.startsWith(`${COOKIE}=`))?.slice(COOKIE.length + 1);
-  if (token && (await same(token, await seal(env.ADMIN_PASSWORD)))) {
-    return new Response(await list(env), { headers: { "content-type": "text/html; charset=utf-8" } });
-  }
-  return page("", false);
+  if (!allowed) return new Response("Forbidden", { status: 403 });
+  if (!env.DB) return new Response("Database is not connected.", { status: 503 });
+  return new Response(await list(env), { headers: { "content-type": "text/html; charset=utf-8" } });
 }
 
 async function list(env) {
-  if (!env.DB) return page("Database is not connected.", true);
   await env.DB.prepare(
     "CREATE TABLE IF NOT EXISTS subscribers (email TEXT PRIMARY KEY, joined_at TEXT NOT NULL)",
   ).run();
@@ -74,20 +71,6 @@ async function list(env) {
     <table><tr><th>Email</th><th>Joined</th></tr>${rows || ""}</table>`;
 }
 
-function page(message, authed) {
-  if (authed) return `<!doctype html><meta charset="utf-8"><p>${escapeHtml(message)}</p>`;
-  return new Response(
-    `<!doctype html><meta charset="utf-8"><title>Admin · Open Investor Pitch</title>
-      <form method="post" style="font:16px ui-sans-serif,system-ui;margin:2rem">
-        <h1>List</h1>
-        <p>${escapeHtml(message)}</p>
-        <label>Password<br><input type="password" name="password" autofocus></label>
-        <button type="submit">Open</button>
-      </form>`,
-    { status: message ? 401 : 200, headers: { "content-type": "text/html; charset=utf-8" } },
-  );
-}
-
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -97,17 +80,67 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-async function seal(secret) {
-  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode("oip-admin"));
-  return btoa(String.fromCharCode(...new Uint8Array(sig)));
+async function accessAllows(token) {
+  if (!token || token.length > 8192) return false;
+  const parts = token.split(".");
+  if (parts.length !== 3) return false;
+  const [headerPart, payloadPart, signaturePart] = parts;
+  const header = decodePart(headerPart);
+  const payload = decodePart(payloadPart);
+  if (!header || !payload || header.alg !== "RS256" || !header.kid) return false;
+  if (payload.iss !== TEAM_DOMAIN) return false;
+  const now = Math.floor(Date.now() / 1000);
+  if (typeof payload.exp !== "number" || payload.exp <= now) return false;
+  if (typeof payload.nbf === "number" && payload.nbf > now) return false;
+  if (String(payload.email || "").trim().toLowerCase() !== ALLOWED_EMAIL) return false;
+  const jwk = (await accessKeys()).find((key) => key.kid === header.kid && key.kty === "RSA");
+  if (!jwk) return false;
+  const key = await crypto.subtle.importKey(
+    "jwk",
+    { kty: "RSA", n: jwk.n, e: jwk.e, alg: "RS256" },
+    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    false,
+    ["verify"],
+  );
+  const signed = new TextEncoder().encode(`${headerPart}.${payloadPart}`);
+  return crypto.subtle.verify("RSASSA-PKCS1-v1_5", key, base64UrlBytes(signaturePart), signed);
 }
 
-async function same(a, b) {
-  const left = new TextEncoder().encode(a);
-  const right = new TextEncoder().encode(b);
-  if (left.length !== right.length) return false;
-  let diff = 0;
-  for (let i = 0; i < left.length; i += 1) diff |= left[i] ^ right[i];
-  return diff === 0;
+function decodePart(part) {
+  try {
+    return JSON.parse(new TextDecoder().decode(base64UrlBytes(part)));
+  } catch {
+    return null;
+  }
+}
+
+function base64UrlBytes(part) {
+  const padded = part.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(part.length / 4) * 4, "=");
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+async function accessKeys() {
+  const now = Date.now();
+  if (keyCache.keys && now < keyCache.expires) return keyCache.keys;
+  const cache = caches.default;
+  const cacheRequest = new Request(CERTS_URL);
+  let response = await cache.match(cacheRequest);
+  if (!response) {
+    const fresh = await fetch(CERTS_URL);
+    if (!fresh.ok) return keyCache.keys || [];
+    response = new Response(await fresh.arrayBuffer(), {
+      headers: {
+        "content-type": "application/json",
+        "cache-control": "public, max-age=3600",
+      },
+    });
+    await cache.put(cacheRequest, response.clone());
+  }
+  const body = await response.json();
+  const keys = Array.isArray(body.keys) ? body.keys : [];
+  keyCache = { keys, expires: now + KEY_TTL_MS };
+  return keys;
 }
