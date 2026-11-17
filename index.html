@@ -81,6 +81,13 @@
     input:focus { outline: 2px solid var(--accent); border-color: transparent; }
     .err { color: var(--accent); font-size: 0.8125rem; font-weight: 650; }
     .fine { color: var(--quiet); font-size: 0.8125rem; line-height: 1.45; }
+    .cats { border: 0; margin: 0.9rem 0 0; padding: 0; }
+    .cats legend { font-size: 0.8125rem; font-weight: 600; padding: 0; }
+    .choices { display: flex; gap: 0.4rem; margin-top: 0.4rem; }
+    .choices label { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; height: 2.75rem; margin: 0; border: 1px solid var(--line-strong); border-radius: 0.5rem; font-size: 0.875rem; font-weight: 650; cursor: pointer; }
+    .choices input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .choices label:has(input:checked) { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+    .choices label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
     form .orange { width: 100%; margin-top: 1rem; }
     footer { border-top: 1px solid var(--line); padding: 2rem 1.5rem; }
     .foot { max-width: 64rem; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; }
@@ -175,6 +182,14 @@
       <form id="join-form" novalidate>
         <label for="email">Email</label>
         <input id="email" name="email" type="email" required autocomplete="email" placeholder="you@fund.com" />
+        <fieldset class="cats">
+          <legend>I am</legend>
+          <div class="choices">
+            <label><input type="radio" name="category" value="Investor" required /> Investor</label>
+            <label><input type="radio" name="category" value="Founder" /> Founder</label>
+            <label><input type="radio" name="category" value="Partner" /> Partner</label>
+          </div>
+        </fieldset>
         <p class="err" id="join-error" hidden></p>
         <button class="orange" type="submit">Join the list</button>
         <p class="fine">No pitch blasts. No account.</p>
@@ -201,6 +216,14 @@
     <form id="dialog-form" novalidate>
       <label for="dialog-email">Email</label>
       <input id="dialog-email" name="email" type="email" required autocomplete="email" placeholder="you@fund.com" />
+      <fieldset class="cats">
+        <legend>I am</legend>
+        <div class="choices">
+          <label><input type="radio" name="category" value="Investor" required /> Investor</label>
+          <label><input type="radio" name="category" value="Founder" /> Founder</label>
+          <label><input type="radio" name="category" value="Partner" /> Partner</label>
+        </div>
+      </fieldset>
       <p class="err" id="dialog-error" hidden></p>
       <button class="orange" type="submit">Join the list</button>
       <p class="fine">No pitch blasts. No account.</p>
@@ -228,14 +251,23 @@
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
     }
 
+    const categories = ["Investor", "Founder", "Partner"];
+
     function bind(form, errorEl) {
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const email = String(new FormData(form).get("email") || "");
+        const data = new FormData(form);
+        const email = String(data.get("email") || "");
+        const category = String(data.get("category") || "");
         const button = form.querySelector("button");
         if (!isEmail(email)) {
           errorEl.hidden = false;
           errorEl.textContent = "Enter a real email.";
+          return;
+        }
+        if (!categories.includes(category)) {
+          errorEl.hidden = false;
+          errorEl.textContent = "Choose Investor, Founder, or Partner.";
           return;
         }
         errorEl.hidden = true;
@@ -244,10 +276,11 @@
           const response = await fetch("/api/join", {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify({ email, category }),
           });
           if (!response.ok) throw new Error("save failed");
-          form.outerHTML = `<div class="saved"><p class="kicker">You’re on the list</p><p style="font-weight:700;margin:0.4rem 0 0">${email.trim().toLowerCase()}</p><p class="fine">We’ll write when there is something to take part in.</p></div>`;
+          const savedEmail = email.trim().toLowerCase().replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+          form.outerHTML = `<div class="saved"><p class="kicker">You’re on the list</p><p style="font-weight:700;margin:0.4rem 0 0">${savedEmail}</p><p class="fine">${category}. We’ll write when there is something to take part in.</p></div>`;
         } catch {
           errorEl.hidden = false;
           errorEl.textContent = "That didn’t save. Try again in a minute.";
