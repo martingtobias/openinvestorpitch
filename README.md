@@ -17,5 +17,5 @@ Cloudflare Access protects `/admin` on `openinvestorpitch.org` and `www.openinve
 
 `wrangler.jsonc` binds that database as `DB` (`openinvestorpitch`, id `f2a5693d-d9d1-41ba-9855-464f6aee6ce7`). A deploy that omits the binding will drop it.
 
-`POST /api/join` with `{ "email": "ada@fund.com" }` inserts one row. The page does not store the address in the browser. The list is at `/admin`.
+`POST /api/join` with `{ "email": "ada@fund.com", "category": "Founder" }` inserts one row. `category` must be Investor, Founder, or Partner. Signing up again updates that category. The page does not store the address in the browser. The list is at `/admin`, and the CSV is at `/admin/export.csv`.
 
