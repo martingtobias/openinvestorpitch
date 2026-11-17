@@ -3,6 +3,10 @@ const COOKIE = "oip_admin";
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === "/api/health") {
+      const row = await env.DB.prepare("SELECT 1 AS ok").first();
+      return Response.json({ ok: row?.ok === 1 });
+    }
     if (url.pathname === "/api/join" && request.method === "POST") return join(request, env);
     if (url.pathname === "/admin") return admin(request, env);
     if (env.ASSETS) return env.ASSETS.fetch(request);
@@ -85,7 +89,12 @@ function page(message, authed) {
 }
 
 function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&", "<": "<", ">": ">", '"': """, "'": "&#39;" })[char]);
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 async function seal(secret) {
