@@ -3,6 +3,7 @@
 .wrangler
 node_modules
 src
+worker.js
 wrangler.jsonc
 package.json
 package-lock.json
