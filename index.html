@@ -40,6 +40,7 @@
     .links { display: none; position: absolute; left: 50%; transform: translateX(-50%); gap: 2rem; }
     @media (min-width: 768px) { .links { display: flex; } }
     .links a { font-size: 0.8125rem; font-weight: 500; color: rgb(18 18 18 / 0.8); }
+    .links a[aria-current="page"] { color: var(--ink); font-weight: 650; }
     .actions { margin-left: auto; display: flex; align-items: center; }
     .ink { background: var(--ink); color: var(--on-ink); border: 0; height: 2.25rem; padding: 0 0.9rem; border-radius: 0.5rem; font-weight: 600; font-size: 0.8125rem; }
     .orange, .outline { border-radius: 0.5rem; font-weight: 650; font-size: 0.875rem; height: 2.75rem; padding: 0 1rem; }
@@ -62,7 +63,7 @@
     h1 { font-size: clamp(2.15rem, 5.7vw, 3.6rem); line-height: 1.02; letter-spacing: -0.045em; font-weight: 800; margin: 1rem 0 0; }
     h1 span { color: var(--accent); }
     h2 { letter-spacing: -0.03em; margin: 0.6rem 0 0; }
-    .lede, .prose p, .benefit p, .steps p, .supporters p, .join-copy { color: var(--muted); line-height: 1.6; }
+    .lede, .prose p, .benefit p, .supporters p, .join-copy { color: var(--muted); line-height: 1.6; }
     .lede { max-width: 38rem; margin: 1.25rem auto 0; }
     .ctas { display: flex; flex-direction: column; gap: 0.75rem; align-items: center; margin-top: 2rem; }
     @media (min-width: 640px) { .ctas { flex-direction: row; justify-content: center; } }
@@ -72,10 +73,7 @@
     .benefit h2 { font-size: 1.25rem; }
     .free { font-size: 0.92rem; font-weight: 650; margin: 0.8rem 0 0; }
     .benefit p { margin: 0.75rem 0 0; font-size: 0.95rem; }
-    .steps { display: grid; gap: 1.5rem; list-style: none; margin: 2rem 0 0; padding: 0; }
-    @media (min-width: 800px) { .steps { grid-template-columns: 1fr 1fr 1fr; } }
-    .steps h3 { font-size: 1.15rem; letter-spacing: -0.02em; margin: 0.35rem 0 0; }
-    .steps p { margin: 0.6rem 0 0; font-size: 0.95rem; }
+    .more { display: inline-block; margin-top: 0.9rem; color: var(--accent); font-size: 0.875rem; font-weight: 650; }
     .supporters { text-align: center; }
     .supporters .orange { display: inline-flex; align-items: center; margin-top: 1.5rem; }
     .join { display: grid; gap: 2rem; border: 1px solid var(--line); border-radius: 1.5rem; padding: 2rem 1.25rem; }
@@ -113,12 +111,11 @@
   <header id="top">
     <div class="bar-wrap">
       <div class="bar">
-        <a class="brand" href="#top"><svg class="mark" viewBox="0 0 16 16" aria-hidden="true"><rect width="16" height="16" rx="4" fill="#f47b24"/><path d="M4.2 8.1h5.1M7.6 5.4l2.7 2.7-2.7 2.7" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Open Investor Pitch</a>
+        <a class="brand" href="/"><svg class="mark" viewBox="0 0 16 16" aria-hidden="true"><rect width="16" height="16" rx="4" fill="#f47b24"/><path d="M4.2 8.1h5.1M7.6 5.4l2.7 2.7-2.7 2.7" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Open Investor Pitch</a>
         <nav class="links">
-          <a href="#how">How it works</a>
-          <a href="#founders">Founders</a>
-          <a href="#investors">Investors</a>
-          <a href="#partners">Partners</a>
+          <a href="/" aria-current="page">Home</a>
+          <a href="/how-it-works">How it works</a>
+          <a href="#join">Join</a>
         </nav>
         <div class="actions">
           <button class="ink" type="button" id="open-join">Join the list</button>
@@ -126,11 +123,9 @@
         </div>
       </div>
       <div class="menu" id="menu">
-        <a href="#how">How it works</a>
-        <a href="#founders">Founders</a>
-        <a href="#investors">Investors</a>
-        <a href="#partners">Partners</a>
-        <a href="#supporters">Supporters</a>
+        <a href="/">Home</a>
+        <a href="/how-it-works">How it works</a>
+        <a href="#join">Join</a>
       </div>
     </div>
   </header>
@@ -142,32 +137,8 @@
       <p class="lede">Open Investor Pitch is a shared format, OIPF. A founder submits one pitch, here or on a member’s application, and chooses whether members can see it.</p>
       <div class="ctas">
         <button class="orange" type="button" id="hero-join">Join the list</button>
-        <a class="outline" href="#how">How it works</a>
+        <a class="outline" href="/how-it-works">How it works</a>
       </div>
-    </div>
-  </section>
-
-  <section id="how">
-    <div class="wide">
-      <p class="kicker">How it works</p>
-      <h2>Pitch once. Share only if you opt in.</h2>
-      <ol class="steps">
-        <li>
-          <p class="kicker">1</p>
-          <h3>Pitch once</h3>
-          <p>Send a deck, or answer a set of structured questions. Do it here, or on any OIPF-compatible application run by a VC, accelerator, or partner.</p>
-        </li>
-        <li>
-          <p class="kicker">2</p>
-          <h3>Opt in to share</h3>
-          <p>You choose whether the pitch goes into the Open Investor Pitch database. If you don’t opt in, it is not shared.</p>
-        </li>
-        <li>
-          <p class="kicker">3</p>
-          <h3>Members discover and reach out</h3>
-          <p>Member VCs, accelerators, and partners can see opted-in pitches and may contact you to invest. One pitch reaches many investors.</p>
-        </li>
-      </ol>
     </div>
   </section>
 
@@ -175,20 +146,21 @@
     <div class="wide benefits">
       <article class="benefit" id="founders">
         <p class="kicker">Founders</p>
-        <h2>One pitch. You choose if it is shared.</h2>
-        <p>Submit as little as your pitch deck, or as much as a set of structured questions. Do it here, or on any OIPF-compatible application a VC, accelerator, or partner runs.</p>
-        <p>Opt in to the Open Investor Pitch database, and every member VC, accelerator, and partner can see your pitch and may contact you to invest. You decide whether it is shared.</p>
+        <h2>Pitch once. Reach every member.</h2>
+        <p>Submit a deck or structured answers, here or on a member application. Opt in, and every member VC, accelerator, and partner can see your pitch and may contact you.</p>
+        <a class="more" href="/how-it-works#founders">How it works</a>
       </article>
       <article class="benefit" id="investors">
         <p class="kicker">Investors</p>
-        <h2>Keep your own intake.</h2>
-        <p>VCs and accelerators keep their own forms: Airtable, Typeform, a custom application, or anything else. If that form and workflow are OIPF-compatible, deals from founders who opt in to sharing flow into the central database.</p>
-        <p>Members can also pull pitches from that database, whether they came in through the form here or through any member’s OIPF-compatible form.</p>
+        <h2>Keep your intake. Get opted-in deal flow.</h2>
+        <p>VCs and accelerators keep their own forms. If the intake is OIPF-compatible, founders who opt in to sharing land in the central database, and you can pull pitches out.</p>
+        <a class="more" href="/how-it-works#investors">How it works</a>
       </article>
       <article class="benefit" id="partners">
         <p class="kicker">Partners</p>
-        <h2>Same path as investors.</h2>
+        <h2>Send pitches in. Pull them out.</h2>
         <p>Keep your own inbound format. If it is OIPF-compatible, opted-in pitches come into the central database, and you can pull pitches out.</p>
+        <a class="more" href="/how-it-works#partners">How it works</a>
       </article>
     </div>
   </section>
