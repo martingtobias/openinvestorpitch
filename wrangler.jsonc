@@ -1,0 +1,37 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "openinvestorpitch",
+	"account_id": "674d045b1478bdc1f44538ee459f288d",
+	// D1 bindings require an ES module. Assets are still served directly
+	// unless the path does not match a file (see src/index.js).
+	"main": "src/index.js",
+	"compatibility_date": "2026-11-17",
+	"workers_dev": true,
+	"preview_urls": true,
+	"observability": {
+		"enabled": true,
+		"head_sampling_rate": 1,
+		"logs": {
+			"enabled": true,
+			"head_sampling_rate": 1,
+			"persist": true,
+			"invocation_logs": true
+		},
+		"traces": {
+			"enabled": false,
+			"persist": true,
+			"head_sampling_rate": 1
+		}
+	},
+	"assets": {
+		"directory": ".",
+		"binding": "ASSETS"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "openinvestorpitch",
+			"database_id": "f2a5693d-d9d1-41ba-9855-464f6aee6ce7"
+		}
+	]
+}
